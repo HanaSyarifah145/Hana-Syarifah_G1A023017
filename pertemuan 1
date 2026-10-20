@@ -1,0 +1,36 @@
+# pertemuan 1: Data Analysis & AI 
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
+
+# Raw Data
+raw_data = {
+    'ID_Pelanggan': [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115],
+    'Usia': [25, 30, np.nan, 45, 22, 35, 28, 50, 41, np.nan, 29, 33, 38, 24, 47],
+    'Pendapatan': [5000000, 8000000, 6000000, np.nan, 3500000, 12000000, 7500000,
+                   15000000, 9200000, 6100000, np.nan, 8500000, 11000000, 4000000, 13500000],
+    'Wilayah': ['Bengkulu', 'Jakarta', 'Bengkulu', 'Bandung', 'Jakarta',
+                'Surabaya', 'Bengkulu', 'Jakarta', 'Bandung', 'Surabaya',
+                'Bengkulu', 'Jakarta', np.nan, 'Bandung', 'Surabaya'],
+    'Kategori_Pelanggan': ['Silver', 'Gold', 'Gold', 'Platinum', np.nan,
+                           'Silver', 'Gold', 'Platinum', 'Silver', 'Gold',
+                           'Silver', 'Platinum', 'Gold', np.nan, 'Platinum']
+}
+
+df = pd.DataFrame(raw_data)
+print(f"--- Total Data Mentah: {len(df)} baris ---")
+print(df.head(10))
+
+# Data Preparation: Handling Missing Values & Scaling
+imputer_num = SimpleImputer(strategy='median')
+df[['Usia', 'Pendapatan']] = imputer_num.fit_transform(df[['Usia', 'Pendapatan']])
+
+imputer_cat = SimpleImputer(strategy='most_frequent')
+df[['Wilayah', 'Kategori_Pelanggan']] = imputer_cat.fit_transform(df[['Wilayah', 'Kategori_Pelanggan']])
+
+scaler = StandardScaler()
+df[['Usia_Scaled', 'Pendapatan_Scaled']] = scaler.fit_transform(df[['Usia', 'Pendapatan']])
+
+print("\n--- Data Setelah Pra-pemrosesan (Cleaned) ---")
+print(df.head(10))
